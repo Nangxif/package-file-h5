@@ -114,9 +114,7 @@ export default {
       }
     },
     creatFileArray(target) {
-      // let entriesArr = Object.entries(target);
       let targetArr = [];
-      // if()
       Object.keys(target).forEach((item, index) => {
         if (typeof Object.values(target)[index] == 'object') {
           targetArr.push({

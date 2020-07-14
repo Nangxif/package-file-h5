@@ -10,9 +10,6 @@ const api = {
   },
   postPackage(data) {
     return instance.post('/package', data);
-  },
-  posDownload(data) {
-    return instance.post('/download', data);
   }
 };
 
