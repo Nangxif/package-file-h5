@@ -57,6 +57,7 @@
       >
         下载
       </el-button>
+      <!-- <el-button type="primary" @click="getCode">发送验证码</el-button> -->
     </el-main>
   </div>
 </template>
@@ -80,6 +81,9 @@ export default {
     };
   },
   methods: {
+    getCode() {
+      this.api.postCode();
+    },
     getFiles() {
       this.$refs.fileInput.click();
     },
@@ -191,7 +195,7 @@ export default {
     },
     download() {
       if (this.filename) {
-        window.location.href = `http://192.168.1.125:3000/api/download?filename=${this.filename}`;
+        window.location.href = `http://xxxx/api/download?filename=${this.filename}`;
       } else {
         this.$message.error('接口未返回任何有效地址');
       }
