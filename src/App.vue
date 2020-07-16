@@ -182,13 +182,13 @@ export default {
         // 去重完成之后生成文件夹数组
         this.filedata = [
           {
-            label: `download${time.timestamp}.zip`,
+            label: `download${time.result.timestamp}.zip`,
             children: this.creatFileArray(this.fileObj)
           }
         ];
 
         this.api.postPackage(files).then(res => {
-          this.filename = res.filename;
+          this.filename = res.result.filename;
           loading.close();
         });
       });
