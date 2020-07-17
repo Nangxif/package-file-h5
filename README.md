@@ -32,7 +32,7 @@ baseUrl：http://localhost:3000/api
 
 但是，ElementUI的树形组件el-tree需要的数据格式是这样的
 
-```
+```javascript
 [{
     label: '一级 1',
     children: [{
