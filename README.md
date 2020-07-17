@@ -1,8 +1,8 @@
-# make-zip
+# package-file-h5
 
 ### 一、开发背景
 
-这个工具是我在很无聊很无聊的时候写的，一开始只是想实现一下上传本地文件或者文件夹，然后在前端生成目录树。后来想想，要不就再弄个打包的吧，于是就有了这个没用的工具……
+这个工具是我在很无聊很无聊的时候写的，一开始只是想实现一下上传本地文件或者文件夹，然后在前端生成目录树。后来想想，要不就再弄个打包的吧，于是就有了这个没用的工具……其实这个工具有个缺点，就是，还打包不了gzip，这个我有空再搞搞吧！
 
 ### 二、接口
 
@@ -10,9 +10,10 @@ baseUrl：http://localhost:3000/api
 
 - POST */relativePath*
 - POST */package*
+- POST */newpackage*
 - GET */download*
 
-具体接口文档请看https://github.com/Nangxif/makeZip
+具体接口文档请看https://github.com/Nangxif/package-file-server
 
 ### 三、部分实现思路
 
