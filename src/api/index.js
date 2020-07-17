@@ -16,6 +16,9 @@ const api = {
   },
   postNewpackage(data) {
     return instance.post('/newpackage', data);
+  },
+  postDecompression(data) {
+    return instance.post('/decompression', data);
   }
 };
 

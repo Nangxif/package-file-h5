@@ -7,6 +7,7 @@
       </h1>
     </el-header>
     <el-main>
+      <h2>一、压缩文件</h2>
       <el-steps direction="vertical">
         <el-step
           title="步骤 1"
@@ -18,7 +19,7 @@
         ></el-step>
         <el-step
           title="步骤 3"
-          description="点击下载按钮，调用/download接口，下载打包后的压缩包"
+          description="点击下载按钮，调用/downloadpackage接口，下载打包后的压缩包"
         ></el-step>
       </el-steps>
       <el-divider></el-divider>
@@ -35,15 +36,15 @@
         ></el-option>
       </el-select>
       <el-button type="primary" @click="getFiles" icon="el-icon-files">
-        选择上传文件
+        选择打包文件
       </el-button>
       <el-button type="primary" @click="getFolder" icon="el-icon-folder">
-        选择上传文件夹
+        选择打包文件夹
       </el-button>
       <input
         type="file"
         ref="folderInput"
-        @change="getFile"
+        @change="uploadFile"
         multiple
         webkitdirectory
         style="display:none;"
@@ -51,26 +52,62 @@
       <input
         type="file"
         ref="fileInput"
-        @change="getFile"
+        @change="uploadFile"
         multiple
         style="display:none;"
       />
       <el-divider></el-divider>
       <div>当前下载按钮下载的打包文件：</div>
       <el-tree :data="filedata" :props="defaultProps"></el-tree>
-      <!-- <el-divider></el-divider> -->
-      <!-- <div>如果文件选择完了，那就下载吧</div> -->
+      <el-divider></el-divider>
+      <div>如果文件选择完了，那就下载吧</div>
       <el-button
         type="primary"
         @click="download"
         icon="el-icon-download"
         style="margin-top:24px;"
       >
-        下载
+        下载压缩包
       </el-button>
       <el-divider></el-divider>
+      <h2>二、解压文件</h2>
+      <el-steps direction="vertical">
+        <el-step
+          title="步骤 1"
+          description="点击上传文件或上传压缩包"
+        ></el-step>
+        <el-step
+          title="步骤 2"
+          description="点击下载按钮，调用/downloaddecompression接口，下载打包后的压缩包"
+        ></el-step>
+      </el-steps>
+      <el-divider></el-divider>
       <div>打包完了，那就顺手解压掉吧</div>
-
+      <input
+        type="file"
+        ref="zipInput"
+        @change="cutFile"
+        accept=".zip,.tgz,.tar"
+        style="display:none;"
+      />
+      <el-button
+        type="primary"
+        @click="getZip"
+        icon="el-icon-folder"
+        style="margin-top:24px;"
+      >
+        选择打包文件夹
+      </el-button>
+      <el-divider></el-divider>
+      <div>如果文件选择完了，那就下载吧</div>
+      <el-button
+        type="primary"
+        @click="downloadcompression"
+        icon="el-icon-download"
+        style="margin-top:24px;"
+      >
+        下载解压包
+      </el-button>
       <!-- <el-button type="primary" @click="getCode">发送验证码</el-button> -->
     </el-main>
   </div>
@@ -105,6 +142,7 @@ export default {
       ],
       type: '',
       filename: '',
+      compressionname: '',
       filedata: [],
       fileArray: [],
       relativePath: {},
@@ -162,6 +200,19 @@ export default {
         };
       }
     },
+    /*生成以下数据格式
+      [
+        {
+          label:'',
+          children: [
+            {
+              label: ''
+            }
+          ]
+        }
+      ]
+    */
+
     creatFileArray(target) {
       let targetArr = [];
       Object.keys(target).forEach((item, index) => {
@@ -178,7 +229,8 @@ export default {
       });
       return targetArr;
     },
-    getFile(e) {
+    // 上传文件文件夹以及打包后返回打包后的文件夹名称
+    uploadFile(e) {
       const loading = this.$loading({
         lock: true,
         text: 'Loading',
@@ -242,6 +294,7 @@ export default {
                   ]
                 }
               ];
+              // 打包完之后记得清除输入框的文件
               this.$refs.fileInput.value = '';
               this.$refs.folderInput.value = '';
               loading.close();
@@ -261,6 +314,7 @@ export default {
                   ]
                 }
               ];
+              // 打包完之后记得清除输入框的文件
               this.$refs.fileInput.value = '';
               this.$refs.folderInput.value = '';
               loading.close();
@@ -270,7 +324,26 @@ export default {
     },
     download() {
       if (this.filename) {
-        window.location.href = `http://xxx/api/download?filename=${this.filename}`;
+        window.location.href = `http://xxx:3000/api/downloadpackage?filename=${this.filename}`;
+      } else {
+        this.$message.error('接口未返回任何有效地址');
+      }
+    },
+    getZip() {
+      this.$refs.zipInput.click();
+    },
+    cutFile(e) {
+      let files = new FormData();
+      files.append(`file`, e.target.files[0]);
+      // console.log(e.target.files);
+      this.api.postDecompression(files).then(res => {
+        this.compressionname = res.result.filename;
+        this.$refs.zipInput.value = '';
+      });
+    },
+    downloadcompression() {
+      if (this.filename) {
+        window.location.href = `http://xxx:3000/api/downloaddecompression?filename=${this.compressionname}`;
       } else {
         this.$message.error('接口未返回任何有效地址');
       }
